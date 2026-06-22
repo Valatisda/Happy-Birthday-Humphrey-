@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday, Humphrey!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:   #090909;
+      --dark:    #0d0d0d;
+      --card:    #111418;
+      --gold:    #f5c518;
+      --gold2:   #c9950a;
+      --white:   #e8e8e8;
+      --muted:   #7a7a8c;
+      --bat:     #1a1a2e;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 18px;
+      overflow-x: hidden;
+    }
+
+    /* ── RAIN CANVAS ── */
+    #rain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.18;
+    }
+
+    /* ── LIGHTNING ── */
+    .lightning {
+      position: fixed;
+      inset: 0;
+      background: white;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+      animation: lightning 8s infinite;
+    }
+    @keyframes lightning {
+      0%,94%,96%,98%,100% { opacity: 0; }
+      95%,97% { opacity: 0.07; }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1.5rem 4rem;
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(245,197,24,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 100% 100% at 50% 100%, rgba(0,0,0,0.9) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Bat signal spotlight */
+    .bat-signal {
+      position: absolute;
+      top: -30%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(700px, 140vw);
+      height: min(700px, 140vw);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,240,160,0.09) 0%, transparent 65%);
+      animation: pulse-signal 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes pulse-signal {
+      0%,100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+      50%      { opacity: 1;   transform: translateX(-50%) scale(1.06); }
+    }
+
+    /* SVG bat logo */
+    .bat-logo {
+      width: min(260px, 72vw);
+      margin-bottom: 2rem;
+      filter: drop-shadow(0 0 28px rgba(245,197,24,0.55)) drop-shadow(0 0 8px rgba(245,197,24,0.3));
+      animation: float 5s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-12px); }
+    }
+
+    .eyebrow {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(0.85rem, 3vw, 1rem);
+      letter-spacing: 0.35em;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+      opacity: 0.85;
+    }
+
+    .hero-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.2rem, 14vw, 7.5rem);
+      line-height: 0.9;
+      letter-spacing: 0.05em;
+      background: linear-gradient(160deg, #fff 0%, var(--gold) 55%, var(--gold2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero-sub {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.6rem, 6vw, 3rem);
+      letter-spacing: 0.12em;
+      color: var(--white);
+      opacity: 0.9;
+      margin-bottom: 2.4rem;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      animation: bounce 2.4s ease-in-out infinite;
+    }
+    .scroll-hint svg { width: 20px; opacity: 0.5; }
+    @keyframes bounce {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50%      { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      position: relative;
+      z-index: 2;
+      padding: 5rem 1.5rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.4em;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      opacity: 0.8;
+    }
+
+    /* ── MESSAGE CARD ── */
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(245,197,24,0.15);
+      border-radius: 4px;
+      padding: 2.4rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .card p {
+      font-size: clamp(1rem, 3.5vw, 1.15rem);
+      line-height: 1.85;
+      color: #ccc;
+      font-weight: 400;
+    }
+    .card p + p { margin-top: 1.2rem; }
+
+    .card .highlight {
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* ── GOTHAM RULES ── */
+    .rules-grid {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1.4rem;
+    }
+
+    .rule {
+      background: var(--card);
+      border-left: 3px solid var(--gold);
+      padding: 1.2rem 1.4rem;
+      display: flex;
+      gap: 1.1rem;
+      align-items: flex-start;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .rule-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      color: var(--gold);
+      line-height: 1;
+      flex-shrink: 0;
+      opacity: 0.6;
+    }
+
+    .rule-text {
+      font-size: clamp(0.95rem, 3vw, 1.05rem);
+      line-height: 1.6;
+      color: #bbb;
+    }
+    .rule-text strong {
+      color: var(--white);
+      display: block;
+      font-size: 1.1em;
+      margin-bottom: 0.2rem;
+    }
+
+    /* ── QUOTE ── */
+    .quote-block {
+      text-align: center;
+      padding: 4rem 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+    .quote-block blockquote {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.6rem, 6vw, 2.8rem);
+      line-height: 1.25;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      max-width: 600px;
+      margin: 0 auto 1.2rem;
+    }
+    .quote-block blockquote span { color: var(--gold); }
+    .quote-attr {
+      font-size: 0.8rem;
+      letter-spacing: 0.25em;
+      color: var(--muted);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 0.5rem 0;
+    }
+    .divider svg { width: 48px; opacity: 0.25; }
+
+    /* ── WISH SECTION ── */
+    .wish-section {
+      text-align: center;
+      padding: 5rem 1.5rem 6rem;
+      position: relative;
+      z-index: 2;
+    }
+    .wish-section h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 9vw, 5rem);
+      letter-spacing: 0.08em;
+      line-height: 1;
+      margin-bottom: 1.2rem;
+< truncated lines 292-294 >
+      background-clip: text;
+    }
+    .wish-section p {
+      font-size: clamp(1rem, 3.5vw, 1.15rem);
+      color: #aaa;
+      max-width: 480px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+
+    /* confetti button */
+    .btn-celebrate {
+      display: inline-block;
+      background: var(--gold);
+      color: #000;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.15em;
+      padding: 0.85rem 2.4rem;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 24px rgba(245,197,24,0.3);
+    }
+    .btn-celebrate:hover, .btn-celebrate:focus {
+      transform: scale(1.04);
+      box-shadow: 0 6px 32px rgba(245,197,24,0.5);
+      outline: none;
+    }
+    .btn-celebrate:active { transform: scale(0.97); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem 1rem 3rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    footer span { color: var(--gold); }
+
+    /* ── CONFETTI PARTICLES ── */
+    .confetti-particle {
+      position: fixed;
+      top: -12px;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 999;
+      animation: fall linear forwards;
+    }
+    @keyframes fall {
+      to { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ── FADE IN ON SCROLL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .bat-logo, .bat-signal, .lightning, .scroll-hint { animation: none; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Atmosphere -->
+<canvas id="rain"></canvas>
+<div class="lightning"></div>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="bat-signal"></div>
+
+  <!-- Bat SVG logo -->
+  <svg class="bat-logo" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M100 28
+      C88 8, 60 0, 40 10
+      C26 17, 10 14, 0 20
+      C14 22, 22 30, 20 44
+      C28 36, 40 34, 52 40
+      C60 44, 66 52, 70 60
+      C76 56, 84 52, 100 52
+      C116 52, 124 56, 130 60
+      C134 52, 140 44, 148 40
+      C160 34, 172 36, 180 44
+      C178 30, 186 22, 200 20
+      C190 14, 174 17, 160 10
+      C140 0, 112 8, 100 28Z"
+      fill="#f5c518"/>
+    <path d="M100 52 C84 52 76 56 70 60 C74 68 80 74 90 76 C94 77 97 76 100 74 C103 76 106 77 110 76 C120 74 126 68 130 60 C124 56 116 52 100 52Z"
+      fill="#c9950a"/>
+  </svg>
+
+  <p class="eyebrow">Gotham City Sends Its Regards</p>
+  <h1 class="hero-name">Humphrey<br/>Nickson</h1>
+  <p class="hero-sub">It's Your Birthday, Dark Knight</p>
+
+  <div class="scroll-hint">
+    <span>SCROLL</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 5v14M5 12l7 7 7-7"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ═══ MESSAGE ═══ -->
+<section class="reveal">
+  <p class="section-label">— A Message From Gotham —</p>
+  <div class="card">
+    <p>
+      Even in the darkest corners of Gotham, there are nights worth celebrating.
+      <span class="highlight">Tonight is yours, Humphrey.</span>
+    </p>
+    <p>
+      Not everyone walks through life with the kind of quiet strength, genuine heart,
+      and character that makes the people around them feel a little safer, a little
+      brighter. But you do — and that's rarer than any superpower.
+    </p>
+    <p>
+      So tonight, the Bat-Signal burns not as a call to duty, but as a tribute.
+      <span class="highlight">Gotham celebrates you.</span>
+      And so do I.
+    </p>
+    <p style="margin-top:1.8rem; font-size:0.9rem; color: var(--muted); letter-spacing:0.1em;">
+      — With love, on your special day 🦇
+    </p>
+  </div>
+</section>
+
+<!-- ═══ QUOTE ═══ -->
+<div class="quote-block reveal">
+  <blockquote>
+    "It's not who I am underneath,<br/>
+    but <span>what I do</span> that defines me."
+  </blockquote>
+  <p class="quote-attr">— BRUCE WAYNE · BATMAN BEGINS</p>
+</div>
+
+<div class="divider">
+  <svg viewBox="0 0 200 100" fill="#f5c518" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M100 18C92 6,72 0,56 8C46 13,32 11,24 16C34 18,40 26,38 36C44 30,54 28,64 32C70 35,74 40,78 46C82 43,88 40,100 40C112 40,118 43,122 46C126 40,130 35,136 32C146 28,156 30,162 36C160 26,166 18,176 16C168 11,154 13,144 8C128 0,108 6,100 18Z"/>
+  </svg>
+</div>
+
+<!-- ═══ GOTHAM RULES FOR YOUR BIRTHDAY ═══ -->
+<section class="reveal">
+  <p class="section-label">— Gotham's Orders For Today —</p>
+  <div class="rules-grid">
+    <div class="rule">
+      <span class="rule-num">01</span>
+      <div class="rule-text">
+        <strong>No saving the city today.</strong>
+        Gotham can handle itself for 24 hours. You're officially off duty.
+      </div>
+    </div>
+    <div class="rule">
+      <span class="rule-num">02</span>
+      <div class="rule-text">
+        <strong>Eat the cake. All of it.</strong>
+        Alfred insists. It's not a request.
+      </div>
+    </div>
+    <div class="rule">
+      <span class="rule-num">03</span>
+      <div class="rule-text">
+        <strong>Accept every birthday wish.</strong>
+        Even Batman deserves to be celebrated — especially by the people who matter most.
+      </div>
+    </div>
+    <div class="rule">
+      <span class="rule-num">04</span>
+      <div class="rule-text">
+        <strong>Remember how legendary you are.</strong>
+        Today, tomorrow, and every single day after this.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FINAL WISH ═══ -->
+<div class="wish-section reveal">
+  <h2>Happy Birthday,<br/>Humphrey</h2>
+  <p>
+    May this year be your best chapter yet — full of laughter, adventure,
+    people who deserve you, and every good thing coming your way.
+  </p>
+  <button class="btn-celebrate" onclick="celebrate()" aria-label="Launch celebration">
+    🦇 &nbsp; Celebrate!
+  </button>
+</div>
+
+<footer>
+  <p>Made with ❤️ &amp; <span>Gotham Grit</span> · For Humphrey Nickson · <span>2026</span></p>
+</footer>
+
+<script>
+  /* ── RAIN CANVAS ── */
+  const canvas = document.getElementById('rain');
+  const ctx = canvas.getContext('2d');
+  let drops = [];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  for (let i = 0; i < 120; i++) {
+    drops.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      len: Math.random() * 18 + 8,
+      speed: Math.random() * 3 + 2,
+      opacity: Math.random() * 0.5 + 0.2
+    });
+  }
+
+  function drawRain() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drops.forEach(d => {
+      ctx.beginPath();
+      ctx.moveTo(d.x, d.y);
+      ctx.lineTo(d.x - 1, d.y + d.len);
+      ctx.strokeStyle = `rgba(180,200,255,${d.opacity})`;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+      d.y += d.speed;
+      if (d.y > canvas.height) {
+        d.y = -d.len;
+        d.x = Math.random() * canvas.width;
+      }
+    });
+    requestAnimationFrame(drawRain);
+  }
+  drawRain();
+
+  /* ── SCROLL REVEAL ── */
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => observer.observe(el));
+
+  /* ── CONFETTI ── */
+  const COLORS = ['#f5c518','#ffffff','#c9950a','#ffe680','#fff3b0','#ffd700'];
+
+  function celebrate() {
+    const count = 90;
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => spawnParticle(), i * 18);
+    }
+  }
+
+  function spawnParticle() {
+    const el = document.createElement('div');
+    el.className = 'confetti-particle';
+    const size = Math.random() * 10 + 6;
+    el.style.cssText = `
+      left: ${Math.random() * 100}vw;
+      width: ${size}px;
+      height: ${size * (Math.random() > 0.5 ? 1 : 2.5)}px;
+      background: ${COLORS[Math.floor(Math.random() * COLORS.length)]};
+      transform: rotate(${Math.random() * 360}deg);
+      animation-duration: ${Math.random() * 2 + 2}s;
+      animation-delay: 0s;
+      opacity: ${Math.random() * 0.5 + 0.5};
+    `;
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  }
+</script>
+</body>
+  </html>
