@@ -489,14 +489,16 @@
   </div>
 </section>
 
-  <!-- VOICE BUTTON -->
-  <button onclick="playVoice()">🎙️ Play Secret Voice Message</button>
+<!-- ═══ FINAL WISH ═══ -->
+  <section class="reveal" style="text-align:center; padding-top:0;">
+  <button class="btn-celebrate" onclick="playVoice()">
+    🎙️ Secret Message From Gotham
+  </button>
 
-  <audio id="voice">
+  <audio id="voice" preload="auto">
     <source src="Voice 021.m4a" type="audio/mpeg">
   </audio>
-
-<!-- ═══ FINAL WISH ═══ -->
+  </section>
 <div class="wish-section reveal">
   <h2>Happy Birthday,<br/>Humphrey</h2>
   <p>
@@ -569,6 +571,14 @@
   /* ── CONFETTI ── */
   const COLORS = ['#f5c518','#ffffff','#c9950a','#ffe680','#fff3b0','#ffd700'];
 
+  function playVoice() {
+  const audio = document.getElementById('voice');
+
+  audio.play().catch(err => {
+    alert("Voice message could not be loaded.");
+    console.log(err);
+  });
+  }
   function celebrate() {
     const count = 90;
     for (let i = 0; i < count; i++) {
